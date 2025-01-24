@@ -1,6 +1,7 @@
 #large_256/index.txt
-large_128/index.txt
+#large_128/index.txt
 #large_64/index.txt
+large_32/index.txt
 
 caravan_animals.xml
 
