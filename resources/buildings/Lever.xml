@@ -1,5 +1,12 @@
 <?xml version="1.0"?>
-<building name="Lever" game_type="Trap" game_subtype="Lever">
-    <sprite index="108" />
-    <sprite index="109" color="building" />
+<building name="LeverOrTrackStop" game_type="Trap" game_subtype="Lever">
+    <if>
+        <BuildingOccupancy value="7" />
+        <sprite index="108" color="building" file="mechanics.png"/>
+        <sprite index="107" file="mechanics.png"/>
+    </if>
+    <else>
+        <sprite index="108" />
+        <sprite index="109" color="building" />
+    </else>
 </building>
