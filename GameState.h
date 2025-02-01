@@ -18,6 +18,7 @@ struct GameState{
     Crd3D dfCursor;
     //position of the selection cursor
     Crd3D dfSelection;
+    Crd3D dfSelection2;
 
     //the width and height of the stonesense window
     int ScreenW;

@@ -509,24 +509,25 @@ namespace
             0);
     }
 
-    void drawSelectionCursor(WorldSegment* segment)
+    void drawSelectionCursors(WorldSegment* segment)
     {
-        auto& ssConfig = stonesenseState.ssConfig;
-        Crd3D selection = segment->segState.dfSelection;
-        if ((selection.x != -30000 && ssConfig.config.follow_DFcursor)
-            || (ssConfig.config.track_mode == Config::TRACKING_FOCUS)) {
-            segment->CorrectTileForSegmentOffset(selection.x, selection.y, selection.z);
-            segment->CorrectTileForSegmentRotation(selection.x, selection.y, selection.z);
-        }
-        else {
-            return;
-        }
-        drawCursorAt(segment, selection, uiColor(3), false);
+        Crd3D selection;
+        (stonesenseState.ssConfig.immersive_mode) ? selection = segment->segState.dfCursor : selection = segment->segState.dfSelection;
+        DFHack::Gui::setCursorCoords(
+            selection.x,
+            selection.y,
+            selection.z);
+        drawCursorAt(segment, segment->segState.dfSelection2, uiColor(4),true);
+        drawCursorAt(segment, selection, uiColor(3), true);
     }
 
     void drawDebugCursor(WorldSegment* segment)
     {
         Crd3D cursor = segment->segState.dfCursor;
+        DFHack::Gui::setCursorCoords(
+            cursor.x,
+            cursor.y,
+            cursor.z);
         drawCursorAt(segment, cursor, uiColor(2), true);
     }
 
@@ -573,8 +574,9 @@ namespace
             segment->segState.dfCursor.y,
             segment->segState.dfCursor.z);
 
-        int i = 1;
+        draw_textf_border(font, *df::global::pause_state ? uiColor(5) : uiColor(3), 0, 0, ALLEGRO_ALIGN_LEFT, (*df::global::pause_state ? "Paused" : "Running"));
 
+        int i = 1;
         draw_textf_border(font, uiColor(1), 2, (i++ * fontHeight), 0,
             "Coord:(%i,%i,%i)", segment->segState.dfCursor.x, segment->segState.dfCursor.y, segment->segState.dfCursor.z);
 
@@ -1130,6 +1132,7 @@ void paintboard()
     }
     if (ssConfig.immersive_mode) {
         al_hold_bitmap_drawing(true);
+        drawSelectionCursors(segment);
         drawImmersiveInterface(segment);
         al_hold_bitmap_drawing(false);
     }
@@ -1153,7 +1156,8 @@ void paintboard()
         al_hold_bitmap_drawing(true);
         draw_textf_border(font, uiColor(1), 10,fontHeight, 0, "%i,%i,%i, r%i, z%i", ssState.Position.x,ssState.Position.y,ssState.Position.z, ssState.Rotation, ssConfig.zoom);
 
-        drawSelectionCursor(segment);
+        drawSelectionCursors(segment);
+
 
         drawDebugCursor(segment);
 
