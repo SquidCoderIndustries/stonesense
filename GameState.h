@@ -22,4 +22,24 @@ struct GameState{
     //the width and height of the stonesense window
     int ScreenW;
     int ScreenH;
+
+    bool blueprinting = false;
+    bool rectangleSelect = true;
+    bool veinMining = false;
+    bool clickedOnceYet = false;
+
+    enum modeTypes {
+        DEFAULT,
+        DIG,
+        CHOP,
+        GATHER,
+        SMOOTH,
+        ERASE,
+        BUILDING,
+        TRAFFIC,
+    };
+
+    //the current mode we're in
+    enum modeTypes mode = DEFAULT;
+    std::string submode = "None";
 };
