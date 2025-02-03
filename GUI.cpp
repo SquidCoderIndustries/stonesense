@@ -7,6 +7,7 @@
 #include <vector>
 #include <filesystem>
 #include <array>
+#include <string>
 
 #include "common.h"
 #include "Tile.h"
@@ -560,6 +561,29 @@ namespace
         //            string);
         //    }
         //}
+    }
+
+    void drawRulerTooltip(WorldSegment* segment) {
+        auto& font = stonesenseState.font;
+        auto fontHeight = al_get_font_line_height(font);
+
+        Crd3D p1 = segment->segState.dfCursor;
+        Crd3D p2 = segment->segState.dfSelection2;
+        Crd3D ruler = {
+            std::abs(p1.x - p2.x) + 1,
+            std::abs(p1.y - p2.y) + 1,
+            std::abs(p1.z - p2.z) + 1
+        };
+        if (stonesenseState.ssState.clickedOnceYet) {
+            draw_text_border(
+                font, uiColor(1),
+                stonesenseState.mouse.x + al_get_text_width(font, "---"),
+                stonesenseState.mouse.y + fontHeight, ALLEGRO_ALIGN_LEFT,
+                (
+                    std::to_string(ruler.x) + "x" +
+                    std::to_string(ruler.y) + "x" +
+                    std::to_string(ruler.z)).c_str());
+        }
     }
 
     void drawImmersiveInterface(WorldSegment* segment)
@@ -1133,6 +1157,7 @@ void paintboard()
     if (ssConfig.immersive_mode) {
         al_hold_bitmap_drawing(true);
         drawSelectionCursors(segment);
+        drawRulerTooltip(segment);
         drawImmersiveInterface(segment);
         al_hold_bitmap_drawing(false);
     }
