@@ -510,6 +510,33 @@ namespace
             0);
     }
 
+    void drawVolume(WorldSegment* segment, const Crd3D& p1, const Crd3D& p2) {
+        int minX = std::min(p1.x, p2.x), maxX = std::max(p1.x, p2.x);
+        int minY = std::min(p1.y, p2.y), maxY = std::max(p1.y, p2.y);
+        int minZ = std::min(p1.z, p2.z), maxZ = std::max(p1.z, p2.z);
+
+        ALLEGRO_COLOR fadeColor = al_map_rgba(0, 0, 0, 1);  // Fully transparent black
+
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
+                    if (z != p2.z) continue;
+                    int edgeCount = 0;
+                    if (x == minX || x == maxX) edgeCount++;
+                    if (y == minY || y == maxY) edgeCount++;
+                    if (z == minZ || z == maxZ) edgeCount++;
+
+                    if (edgeCount >= 2) { // Only draw points on edges
+                        Crd3D point = { x, y, z };
+                        drawCursorAt(segment, point, uiColor(2), true);
+                    }
+                }
+            }
+        }
+    }
+
+
+
     void drawSelectionCursors(WorldSegment* segment)
     {
         Crd3D selection;
@@ -518,6 +545,7 @@ namespace
             selection.x,
             selection.y,
             selection.z);
+        drawVolume(segment, segment->segState.dfSelection2, selection);
         drawCursorAt(segment, segment->segState.dfSelection2, uiColor(4),true);
         drawCursorAt(segment, selection, uiColor(3), true);
     }
