@@ -515,20 +515,28 @@ namespace
         int minY = std::min(p1.y, p2.y), maxY = std::max(p1.y, p2.y);
         int minZ = std::min(p1.z, p2.z), maxZ = std::max(p1.z, p2.z);
 
-        ALLEGRO_COLOR fadeColor = al_map_rgba(0, 0, 0, 1);  // Fully transparent black
+        ALLEGRO_COLOR fadeColor = al_map_rgba(0, 0, 0, 0);  // Fully transparent black
 
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
-                    if (z != p2.z) continue;
                     int edgeCount = 0;
                     if (x == minX || x == maxX) edgeCount++;
                     if (y == minY || y == maxY) edgeCount++;
                     if (z == minZ || z == maxZ) edgeCount++;
 
                     if (edgeCount >= 2) { // Only draw points on edges
+                        // Compute fade effect based on distance from the highest Z point
+                        int maxFadeDistance = std::max(10, (maxZ - minZ));
+
+                        auto fadePercent = ((std::max(p1.z, p2.z) - z) * 100) / maxFadeDistance; // Closer = lower fade
+
+                        // Blend between base color and fade color
+                        auto baseColor = uiColor(2);
+                        ALLEGRO_COLOR finalColor = partialBlend(baseColor, fadeColor, fadePercent);
+
                         Crd3D point = { x, y, z };
-                        drawCursorAt(segment, point, uiColor(2), true);
+                        drawCursorAt(segment, point, finalColor, true);
                     }
                 }
             }
