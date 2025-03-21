@@ -226,14 +226,15 @@ void doMouse()
             tiley = tiley + ssState.Position.y;
             tilez = tilez + ssState.Position.z - 1;
 
-            ssState.dfCursor.x = tilex;
-            ssState.dfCursor.y = tiley;
-            ssState.dfCursor.z = tilez;
+            ssState.dfCursor->x = tilex;
+            ssState.dfCursor->y = tiley;
+            ssState.dfCursor->z = tilez;
             if (!ssState.clickedOnceYet) {
-                ssState.dfSelection2.x = tilex;
-                ssState.dfSelection2.y = tiley;
-                ssState.dfSelection2.z = tilez;
+                ssState.dfSelection2->x = tilex;
+                ssState.dfSelection2->y = tiley;
+                ssState.dfSelection2->z = tilez;
             }
+
         }
         stonesenseState.timeToReloadSegment = true;
         if (ssConfig.immersive_mode && mouse.buttons & 1) {
@@ -351,7 +352,7 @@ void action_cycletrackingmode(uint32_t keymod)
     }
     else {
         ssConfig.config.track_mode = (Config::trackingmode)(ssConfig.config.track_mode + 1);
-        if (ssConfig.config.track_mode >= Config::TRACKING_INVALID) {
+        if (ssConfig.config.track_mode > Config::TRACKING_CENTER) {
             ssConfig.config.track_mode = Config::TRACKING_NONE;
         }
     }
